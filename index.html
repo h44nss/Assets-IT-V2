@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistem Manajemen Aset IT</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>Sistem Manajemen Aset IT</h1>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="action-buttons">
+        <button id="add-device-btn" class="btn btn-primary">
+          Tambah Device Baru
+        </button>
+      </div>
+
+      <div id="add-form" class="form-container">
+        <h2 class="form-title">Tambah Device Baru</h2>
+        <form id="device-form">
+          <div class="form-group">
+            <label for="device-name">Nama Device</label>
+            <input type="text" id="device-name" class="form-control" required />
+          </div>
+
+          <div class="form-group">
+            <label for="device-category">Kategori Device</label>
+            <select id="device-category" class="form-control" required>
+              <option value="">Pilih Kategori</option>
+              <option value="Laptop">Laptop</option>
+              <option value="Desktop">Desktop</option>
+              <option value="Printer">Printer</option>
+              <option value="Scanner">Scanner</option>
+              <option value="Server">Server</option>
+              <option value="Networking">Networking</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="device-serial">Nomor Seri</label>
+            <input
+              type="text"
+              id="device-serial"
+              class="form-control"
+              required />
+          </div>
+
+          <div class="form-group">
+            <label for="device-date">Tanggal Pengambilan</label>
+            <input type="date" id="device-date" class="form-control" required />
+          </div>
+
+          <div class="form-group">
+            <label for="device-destination">Lokasi/Tujuan Penyaluran</label>
+            <input
+              type="text"
+              id="device-destination"
+              class="form-control"
+              required />
+          </div>
+
+          <div class="form-group">
+            <label for="device-status">Status</label>
+            <select id="device-status" class="form-control" required>
+              <option value="">Pilih Status</option>
+              <option value="Masuk">Masuk</option>
+              <option value="Keluar">Keluar</option>
+            </select>
+          </div>
+
+          <div class="form-buttons">
+            <button type="button" id="cancel-form" class="btn">Batal</button>
+            <button type="submit" class="btn btn-success">Simpan</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="filter-container">
+        <h3 class="filter-title">Filter Data</h3>
+        <div class="filter-controls">
+          <div class="form-group">
+            <label for="filter-category">Kategori</label>
+            <select id="filter-category" class="form-control">
+              <option value="all">Semua Kategori</option>
+              <option value="Laptop">Laptop</option>
+              <option value="Desktop">Desktop</option>
+              <option value="Printer">Printer</option>
+              <option value="Scanner">Scanner</option>
+              <option value="Server">Server</option>
+              <option value="Networking">Networking</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="filter-status">Status</label>
+            <select id="filter-status" class="form-control">
+              <option value="all">Semua Status</option>
+              <option value="Masuk">Masuk</option>
+              <option value="Keluar">Keluar</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="search-input">Pencarian</label>
+            <input
+              type="text"
+              id="search-input"
+              class="form-control"
+              placeholder="Cari berdasarkan nama, seri, dll." />
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-container">
+        <div class="summary-card">
+          <h3>Total Device</h3>
+          <p id="total-devices">0</p>
+        </div>
+        <div class="summary-card">
+          <h3>Device Masuk</h3>
+          <p id="incoming-devices">0</p>
+        </div>
+        <div class="summary-card">
+          <h3>Device Keluar</h3>
+          <p id="outgoing-devices">0</p>
+        </div>
+      </div>
+
+      <table id="devices-table">
+        <thead>
+          <tr>
+            <th>Nama Device</th>
+            <th>Kategori</th>
+            <th>Nomor Seri</th>
+            <th>Tanggal Pengambilan</th>
+            <th>Lokasi/Tujuan</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="devices-list">
+          <!-- Data will be populated here by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
