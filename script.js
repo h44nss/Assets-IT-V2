@@ -105,8 +105,76 @@ function handleFormSubmit(e) {
     });
 }
 
-// Updated fetchDevicesFromSpreadsheet function to use the service worker proxy
+// service-worker-registration.js - Replace your current registration with this
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(function(registration) {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        
+        // Notify the main script when the service worker is active
+        if (registration.active) {
+          window.dispatchEvent(new Event('serviceWorkerActive'));
+        } else {
+          // Wait for the service worker to become active
+          registration.addEventListener('updatefound', function() {
+            var installingWorker = registration.installing;
+            installingWorker.addEventListener('statechange', function() {
+              if (installingWorker.state === 'activated') {
+                console.log('Service worker is now active');
+                window.dispatchEvent(new Event('serviceWorkerActive'));
+              }
+            });
+          });
+        }
+      })
+      .catch(function(error) {
+        console.log('ServiceWorker registration failed: ', error);
+      });
+  });
+}
+
+// === In your main script.js ===
+
+// Wait for service worker to be active before making requests
+let serviceWorkerReady = false;
+
+// Listen for the custom event from service-worker-registration.js
+window.addEventListener('serviceWorkerActive', function() {
+  console.log('Service worker is active and ready to handle requests');
+  serviceWorkerReady = true;
+  
+  // Now you can load initial data
+  loadInitialData();
+});
+
+// Function to load initial data after service worker is ready
+function loadInitialData() {
+  fetchDevicesFromSpreadsheet()
+    .then(function(data) {
+      // Update your UI with the data
+      console.log('Initial data loaded successfully');
+    })
+    .catch(function(error) {
+      console.error('Failed to load initial data:', error);
+    });
+}
+
+// Updated fetchDevicesFromSpreadsheet function
 async function fetchDevicesFromSpreadsheet() {
+  // Make sure service worker is ready before making a request
+  if (!serviceWorkerReady && 'serviceWorker' in navigator) {
+    if (!navigator.serviceWorker.controller) {
+      // If no controller, wait for it to be ready
+      await new Promise(resolve => {
+        window.addEventListener('serviceWorkerActive', resolve, { once: true });
+        
+        // Timeout after 5 seconds if service worker doesn't activate
+        setTimeout(resolve, 5000);
+      });
+    }
+  }
+  
   try {
     // Your Google Apps Script URL
     const gasUrl = 'https://script.google.com/macros/s/AKfycbxlkIBjXexp-sbd3BNyFb1dqOR6bbz-pOG6iNBdyYmz_YWuokVOZeJ5kddR350igeo4qg/exec';
@@ -126,7 +194,6 @@ async function fetchDevicesFromSpreadsheet() {
     throw error;
   }
 }
-
 // Example for POST requests if you need them
 async function saveDataToSpreadsheet(data) {
   try {
