@@ -1,7 +1,7 @@
 let devices = [];
 let editingIndex = -1;
 const WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbw5XRCz6agc_QGHHlSmNV2ym4aJ_NSG3an-GWl1DdUm8whM2YwzXC9KlZnkg_KI9ivd/exec"; // Ganti ini!
+  "https://script.google.com/macros/s/AKfycbxlkIBjXexp-sbd3BNyFb1dqOR6bbz-pOG6iNBdyYmz_YWuokVOZeJ5kddR350igeo4qg/exec"; // Ganti ini!
 
 // DOM Elements
 const addDeviceBtn = document.getElementById("add-device-btn");
