@@ -105,35 +105,54 @@ function handleFormSubmit(e) {
     });
 }
 
-function fetchDevicesFromSpreadsheet() {
-  showLoading(true);
-  
-  fetch(WEB_APP_URL, {
-    method: "GET",
-    mode: "cors" // Explicitly set CORS mode
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      showLoading(false);
-      if (Array.isArray(data)) {
-        devices = data;
-        renderDevices();
-        updateSummary();
-      } else {
-        showError("Format data tidak valid");
-        console.error("Invalid data format:", data);
-      }
-    })
-    .catch((err) => {
-      showLoading(false);
-      showError("Gagal mengambil data: " + err.message);
-      console.error("Gagal ambil data dari spreadsheet:", err);
+// Updated fetchDevicesFromSpreadsheet function to use the service worker proxy
+async function fetchDevicesFromSpreadsheet() {
+  try {
+    // Your Google Apps Script URL
+    const gasUrl = 'https://script.google.com/macros/s/AKfycbxlkIBjXexp-sbd3BNyFb1dqOR6bbz-pOG6iNBdyYmz_YWuokVOZeJ5kddR350igeo4qg/exec';
+    
+    // Make the request through our proxy endpoint
+    const response = await fetch(`/proxy-to-gas?url=${encodeURIComponent(gasUrl)}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('Data berhasil diambil:', data);
+    return data;
+  } catch (error) {
+    console.error('Gagal ambil data dari spreadsheet:', error);
+    throw error;
+  }
+}
+
+// Example for POST requests if you need them
+async function saveDataToSpreadsheet(data) {
+  try {
+    // Your Google Apps Script URL
+    const gasUrl = 'https://script.google.com/macros/s/AKfycbxlkIBjXexp-sbd3BNyFb1dqOR6bbz-pOG6iNBdyYmz_YWuokVOZeJ5kddR350igeo4qg/exec';
+    
+    // Make the request through our proxy endpoint
+    const response = await fetch(`/proxy-to-gas?url=${encodeURIComponent(gasUrl)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
     });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    console.log('Data berhasil disimpan:', result);
+    return result;
+  } catch (error) {
+    console.error('Gagal simpan data ke spreadsheet:', error);
+    throw error;
+  }
 }
 
 function renderDevices() {
